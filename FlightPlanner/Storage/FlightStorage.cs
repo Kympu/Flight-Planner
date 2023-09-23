@@ -1,5 +1,4 @@
 ﻿using FlightPlanner.Models;
-using System.Reflection;
 
 namespace FlightPlanner.Storage
 {
@@ -83,6 +82,15 @@ namespace FlightPlanner.Storage
         public void DeleteFlight(int id)
         {
             _flightStorage.RemoveAll(flight => flight.Id == id);
+        }
+
+        public Flights SearchAirport(string search)
+        {
+            var flight = _flightStorage
+                .FirstOrDefault(s => new[] { s.from.Country, s.from.City, s.from.AirportCode }
+                .Any(attr => attr.ToLower().Contains(search.ToLower().Trim())));
+
+            return flight;
         }
     }
 }

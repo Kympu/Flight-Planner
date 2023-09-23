@@ -2,7 +2,6 @@
 using FlightPlanner.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace FlightPlanner.Controllers
 {
@@ -21,7 +20,7 @@ namespace FlightPlanner.Controllers
 
         [Route("flights/{id}")]
         [HttpGet]
-       public IActionResult GetFlight(int id)
+        public IActionResult GetFlight(int id)
         {
             return NotFound();
         }
@@ -35,23 +34,14 @@ namespace FlightPlanner.Controllers
                 return Conflict();
             }
 
-            if (!_storage.ValidateEntry(flight))
-            {
-                return BadRequest();
-            }
-
-            if (_storage.ValidateDestination(flight))
-            {
-                return BadRequest();
-            }
-
-            if (!_storage.ValidateDate(flight))
+            if (!_storage.ValidateEntry(flight)
+                || _storage.ValidateDestination(flight)
+                || !_storage.ValidateDate(flight))
             {
                 return BadRequest();
             }
 
             _storage.AddFlight(flight);
-
             return Created("", flight);
         }
 
