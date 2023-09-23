@@ -79,5 +79,10 @@ namespace FlightPlanner.Storage
 
             return true;
         }
+
+        public void DeleteFlight(int id)
+        {
+            _flightStorage.RemoveAll(flight => flight.Id == id);
+        }
     }
 }

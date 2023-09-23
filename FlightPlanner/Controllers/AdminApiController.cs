@@ -54,5 +54,14 @@ namespace FlightPlanner.Controllers
 
             return Created("", flight);
         }
+
+        [Route("flights/{id}")]
+        [HttpDelete]
+        public IActionResult DeleteFlight(int id)
+        {
+            _storage.DeleteFlight(id);
+
+            return Ok();
+        }
     }
 }
