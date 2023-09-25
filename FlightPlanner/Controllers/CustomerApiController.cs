@@ -26,6 +26,11 @@ namespace FlightPlanner.Controllers
         {
             var result = _storage.SearchFlight(request);
 
+            if (request.From == request.To)
+            {
+                return BadRequest();
+            }
+
             var pageResult = new PageResult<Flights>
             {
                 Page = 0,

@@ -71,7 +71,7 @@ namespace FlightPlanner.Storage
                 return false;
             }
 
-            if (departureTime.Date >= arrivalTime.Date)
+            if (departureTime >= arrivalTime)
             {
                 return false;
             }
@@ -107,9 +107,7 @@ namespace FlightPlanner.Storage
 
         public Flights FindFlightById(int id)
         {
-            var flight = _flightStorage.FirstOrDefault(s => s.Id == id);
-
-            return flight;
+            return _flightStorage.FirstOrDefault(s => s.Id == id);
         }
     }
 }
