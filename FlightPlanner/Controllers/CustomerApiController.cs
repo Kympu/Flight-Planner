@@ -28,7 +28,7 @@ namespace FlightPlanner.Controllers
 
             if (request.From == request.To)
             {
-                return BadRequest();
+                return BadRequest(request);
             }
 
             var pageResult = new PageResult<Flights>
@@ -49,7 +49,7 @@ namespace FlightPlanner.Controllers
 
             if(result == null)
             {
-                return NotFound();
+                return NotFound(id);
             }
 
             return Ok(result);

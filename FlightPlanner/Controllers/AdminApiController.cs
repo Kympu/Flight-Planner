@@ -2,6 +2,7 @@
 using FlightPlanner.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FlightPlanner.Controllers
 {
@@ -11,7 +12,7 @@ namespace FlightPlanner.Controllers
     public class AdminApiController : ControllerBase
     {
         private readonly FlightStorage _storage;
-
+        private static readonly object _locker = new object();
 
         public AdminApiController()
         {
@@ -22,26 +23,31 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
-            return NotFound();
+            return NotFound(id);
         }
 
         [Route("flights")]
         [HttpPut]
         public IActionResult PutFlight(Flights flight)
         {
-            if (_storage.CheckDuplicateEntry(flight) != null)
+            lock (_locker)
             {
-                return Conflict();
-            }
+                if (_storage.CheckDuplicateEntry(flight) != null)
+                {
+                    return Conflict(flight);
+                }
 
-            if (!_storage.ValidateEntry(flight)
-                || _storage.ValidateDestination(flight)
-                || !_storage.ValidateDate(flight))
-            {
-                return BadRequest();
-            }
 
-            _storage.AddFlight(flight);
+                if (!_storage.ValidateEntry(flight)
+                    || _storage.ValidateDestination(flight)
+                    || !_storage.ValidateDate(flight))
+                {
+                    return BadRequest(flight);
+                }
+
+                _storage.AddFlight(flight);
+            }
+          
             return Created("", flight);
         }
 
@@ -49,9 +55,12 @@ namespace FlightPlanner.Controllers
         [HttpDelete]
         public IActionResult DeleteFlight(int id)
         {
-            _storage.DeleteFlight(id);
+            lock(_locker)
+            {
+                _storage.DeleteFlight(id);
+            }
 
-            return Ok();
+            return Ok(id);
         }
     }
 }
