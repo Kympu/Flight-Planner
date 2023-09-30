@@ -8,23 +8,25 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class CustomerApiController : ControllerBase
     {
-        private readonly FlightStorage _storage = new();
+        private readonly FilterData _data;
+        public CustomerApiController(FlightPlannerDbContext context)
+        {
+            _data = new FilterData(context);
+        }
 
         [Route("airports")]
         [HttpGet]
-        public IActionResult SearchAirport(string search)
+        public IActionResult SearchAirport([FromQuery] string search)
         {
-            var flight = _storage.SearchAirport(search);
-            var result = new[] { flight.From };
-
-            return Ok(result);
+            var flight = _data.SearchAirport(search);
+            return Ok(flight);
         }
 
         [Route("flights/search")]
         [HttpPost]
         public IActionResult GetFlights(SearchFlightsRequest request)
         {
-            var result = _storage.SearchFlight(request);
+            var result = _data.SearchFlight(request);
 
             if (request.From == request.To)
             {
@@ -45,7 +47,7 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult FindFlightById(int id)
         {
-            var result = _storage.FindFlightById(id);
+            var result = _data.FindFlightById(id);
 
             if(result == null)
             {

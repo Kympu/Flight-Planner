@@ -2,6 +2,7 @@
 using FlightPlanner.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace FlightPlanner.Controllers
@@ -11,19 +12,28 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class AdminApiController : ControllerBase
     {
-        private readonly FlightStorage _storage;
+        private readonly FilterData _data;
+        private readonly FlightPlannerDbContext _context;
         private static readonly object _locker = new object();
 
-        public AdminApiController()
+        public AdminApiController(FlightPlannerDbContext context)
         {
-            _storage = new FlightStorage();
+            _context = context;
+            _data = new FilterData(context);
         }
 
         [Route("flights/{id}")]
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
-            return NotFound(id);
+            var flight = _context.Flights.SingleOrDefault(f => f.Id == id);
+
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(flight);
         }
 
         [Route("flights")]
@@ -32,22 +42,22 @@ namespace FlightPlanner.Controllers
         {
             lock (_locker)
             {
-                if (_storage.CheckDuplicateEntry(flight) != null)
+                if (_data.CheckDuplicateEntry(flight) != null)
                 {
                     return Conflict(flight);
                 }
 
-
-                if (!_storage.ValidateEntry(flight)
-                    || _storage.ValidateDestination(flight)
-                    || !_storage.ValidateDate(flight))
-                {
-                    return BadRequest(flight);
-                }
-
-                _storage.AddFlight(flight);
+                if (!_data.ValidateEntry(flight)
+                     || _data.ValidateDestination(flight)
+                     || !_data.ValidateDate(flight)) 
+                 {
+                     return BadRequest(flight);
+                 }
+ 
+                _context.Flights.Add(flight);
+                _context.SaveChanges();
             }
-          
+
             return Created("", flight);
         }
 
@@ -57,9 +67,14 @@ namespace FlightPlanner.Controllers
         {
             lock(_locker)
             {
-                _storage.DeleteFlight(id);
-            }
+                var flightToDelete = _context.Flights.Find(id);
 
+                if (flightToDelete != null)
+                {
+                    _context.Flights.Remove(flightToDelete);
+                    _context.SaveChanges();
+                }
+            }
             return Ok(id);
         }
     }
