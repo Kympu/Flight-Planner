@@ -1,4 +1,5 @@
-﻿using FlightPlanner.Models;
+﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner
