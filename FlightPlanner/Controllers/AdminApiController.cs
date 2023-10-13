@@ -20,7 +20,7 @@ namespace FlightPlanner.Controllers
 
         public AdminApiController(
             IFlightService flightService,
-            IMapper mapper, 
+            IMapper mapper,
             IEnumerable<IValidate> validators)
         {
             _flightService = flightService;
@@ -48,21 +48,21 @@ namespace FlightPlanner.Controllers
         {
             lock (_locker)
             {
-                var flight = _mapper.Map<Flights>(request);
+               var flight = _mapper.Map<Flights>(request); 
 
-                if(!_validators.All(v => v.IsValid(flight)))
+                if (!_validators.All(v => v.IsValid(flight)))
                 {
                     return BadRequest();
                 }
 
-                if(_flightService.Exists(flight))
+                if (_flightService.Exists(flight))
                 {
                     return Conflict();
                 }
 
                 _flightService.Create(flight);
 
-                request = _mapper.Map<FlightRequest>(request);
+                request = _mapper.Map<FlightRequest>(flight);
             }
 
             return Created("", request);
@@ -72,15 +72,14 @@ namespace FlightPlanner.Controllers
         [HttpDelete]
         public IActionResult DeleteFlight(int id)
         {
-            lock(_locker)
+            lock (_locker)
             {
-                /*var flightToDelete = _context.Flights.Find(id);
+                var flight = _flightService.GetFullFlightById(id);
 
-                if (flightToDelete != null)
+                if (flight != null)
                 {
-                    _context.Flights.Remove(flightToDelete);
-                    _context.SaveChanges();
-                }*/
+                    _flightService.Delete(flight);
+                }
             }
 
             return Ok(id);

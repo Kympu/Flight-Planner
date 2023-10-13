@@ -7,8 +7,8 @@ namespace FlightPlanner.Validations
     {
         public bool IsValid(Flights flight)
         {
-            return 
-                flight?.To?.AirportCode?.Trim().ToLower() != 
+            return
+                flight?.To?.AirportCode?.Trim().ToLower() !=
                 flight?.From?.AirportCode?.Trim().ToLower();
         }
     }
