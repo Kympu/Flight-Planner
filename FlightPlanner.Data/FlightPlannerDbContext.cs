@@ -1,7 +1,6 @@
 ﻿using FlightPlanner.Core.Models;
 using FlightPlanner.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FlightPlanner
 {
@@ -10,7 +9,6 @@ namespace FlightPlanner
         public FlightPlannerDbContext(DbContextOptions<FlightPlannerDbContext> options) : 
             base(options)
         {
-                
         }
 
         public DbSet<Flights> Flights { get; set; }

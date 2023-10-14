@@ -1,7 +1,6 @@
 ﻿using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlanner.Data;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace FlightPlanner.Services
 {

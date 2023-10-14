@@ -1,6 +1,7 @@
 ﻿using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlanner.Data;
+using FlightPlanner.Models;
 
 namespace FlightPlanner.Services
 {
@@ -10,24 +11,29 @@ namespace FlightPlanner.Services
         {
         }
 
-        public bool Exists(Airport airport)
+        public List<Airport> GetAirport(string search)
         {
-            throw new NotImplementedException();
-        }
+            search = search.ToLower().Trim();
 
-        public IQueryable<Airport> GetAirport(string search)
-        {
             var airports = _context.Airports
-                .Where(a => a.AirportCode.ToUpper().Contains(search)
-                    || a.City.ToUpper().Contains(search)
-                    || a.Country.ToUpper().Contains(search));
+                .AsEnumerable()
+                .Where(a => new[] { a.Country, a.City, a.AirportCode }
+                    .Any(attr => attr.ToLower().Contains(search)))
+                .ToList();
 
             return airports;
         }
 
-        public Airport? GetAirport(Airport airport)
+        public List<Flights> SearchFlight(SearchFlightsRequest request)
         {
-            throw new NotImplementedException();
+            var flight = _context.Flights
+                .Where(f =>
+                    f.From.AirportCode.Contains(request.From)
+                    && f.To.AirportCode.Contains(request.To)
+                    && f.DepartureTime.Contains(request.DepartureDate))
+                .ToList();
+
+            return flight;
         }
     }
 }

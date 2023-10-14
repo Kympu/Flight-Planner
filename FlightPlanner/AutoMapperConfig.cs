@@ -19,11 +19,7 @@ namespace FlightPlanner
                 cfg.CreateMap<FlightRequest, Flights>();
                 cfg.CreateMap<Flights, FlightRequest>();
             });
-            // only during development, validate your mappings; remove it before release
-            #if DEBUG
-            configuration.AssertConfigurationIsValid();
-            #endif
-            // use DI (http://docs.automapper.org/en/latest/Dependency-injection.html) or create the mapper yourself
+
             var mapper = configuration.CreateMapper();
             return mapper;
         }

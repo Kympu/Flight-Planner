@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
 using FlightPlanner.Models;
 using FlightPlanner.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,23 +12,25 @@ namespace FlightPlanner.Controllers
     public class CustomerApiController : ControllerBase
     {
 
-        private readonly FilterData _data;
         private readonly AirportService _airportService;
+        private readonly IFlightService _flightService;
         private readonly IMapper _mapper;
-        public CustomerApiController(FlightPlannerDbContext context, IMapper mapper)
+        public CustomerApiController(
+            FlightPlannerDbContext context, 
+            IMapper mapper, 
+            IFlightService flightService)
         {
-            _data = new FilterData(context);
             _mapper = mapper;
             _airportService = new AirportService(context);
+            _flightService = flightService;
         }
 
         [Route("airports")]
         [HttpGet]
         public IActionResult SearchAirport(string search)
         {
-            var airport = _airportService.GetAirport(search);
-
-            var airportRequest = _mapper.Map<AirportRequest>(airport);
+            var airports = _airportService.GetAirport(search);
+            var airportRequest = airports.Select(a => _mapper.Map<AirportRequest>(a)).ToList();
 
             return Ok(airportRequest);
         }
@@ -36,7 +39,8 @@ namespace FlightPlanner.Controllers
         [HttpPost]
         public IActionResult GetFlights(SearchFlightsRequest request)
         {
-            var result = _data.SearchFlight(request);
+            var result = _airportService.SearchFlight(request);
+
 
             if (request.From == request.To)
             {
@@ -57,14 +61,15 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult FindFlightById(int id)
         {
-            var result = _data.FindFlightById(id);
+            var result = _flightService.GetFullFlightById(id);
 
-            if(result == null)
+
+            if (result == null)
             {
                 return NotFound(id);
             }
 
-            return Ok(result);
+            return Ok(_mapper.Map<FlightRequest>(result));
         }
     }
 }

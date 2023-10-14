@@ -1,10 +1,11 @@
 ﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Models;
 
 namespace FlightPlanner.Core.Services
 {
     public interface IAirportService : IEntityService<Airport>
     {
-        Airport? GetAirport(Airport airport);
-        bool Exists(Airport airport);
+        List<Airport> GetAirport(string search);
+        List<Flights> SearchFlight(SearchFlightsRequest request);
     }
 }
