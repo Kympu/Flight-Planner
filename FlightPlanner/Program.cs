@@ -2,9 +2,12 @@ using FlightPlanner.Core.Interfaces;
 using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlanner.Data;
+using FlightPlanner.Handlers;
 using FlightPlanner.Services;
 using FlightPlanner.Validations;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+
 namespace FlightPlanner
 {
     public class Program
@@ -33,6 +36,9 @@ namespace FlightPlanner
             var mapper = AutoMapperConfig.CreateMapper();
             builder.Services.AddSingleton(mapper);
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -41,8 +47,9 @@ namespace FlightPlanner
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
