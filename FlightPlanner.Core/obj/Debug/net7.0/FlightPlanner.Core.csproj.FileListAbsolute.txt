@@ -1,0 +1,11 @@
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\bin\Debug\net7.0\FlightPlanner.Core.deps.json
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\bin\Debug\net7.0\FlightPlanner.Core.dll
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\bin\Debug\net7.0\FlightPlanner.Core.pdb
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\FlightPlanner.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\FlightPlanner.Core.AssemblyInfoInputs.cache
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\FlightPlanner.Core.AssemblyInfo.cs
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\FlightPlanner.Core.csproj.CoreCompileInputs.cache
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\FlightPlanner.Core.dll
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\refint\FlightPlanner.Core.dll
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\FlightPlanner.Core.pdb
+C:\Users\eriks\Desktop\repos\FlightPlanner\FlightPlanner.Core\obj\Debug\net7.0\ref\FlightPlanner.Core.dll
